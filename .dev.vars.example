@@ -1,0 +1,13 @@
+# Copy this file to .dev.vars for local development (`cp .dev.vars.example .dev.vars`).
+# .dev.vars is gitignored — never commit real secrets.
+# In production these are set with: npx wrangler secret put <NAME>
+
+# Meta App Secret (Meta App Dashboard -> App settings -> Basic)
+APP_SECRET=replace-with-your-meta-app-secret
+
+# Password for the /admin page (pick something strong)
+ADMIN_PASSWORD=replace-with-a-strong-password
+
+# Any random string you invent; must match what you paste into the Meta
+# webhook config when adding the callback URL.
+WEBHOOK_VERIFY_TOKEN=pick-any-random-string

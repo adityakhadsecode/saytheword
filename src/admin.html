@@ -1,0 +1,2354 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>SayTheWord — Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400..500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;1,8..60,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        /* Steep — serif on warm paper */
+        --ink: #17191c;
+        --paper: #ffffff;
+        --mist: #f2f2f3;
+        --fog: #fafafb;
+        --slate: #777b86;
+        --ash: #979799;
+        --smoke: #a3a6af;
+        --peach: #fbe1d1;
+        --sienna: #5d2a1a;
+        --line: #ececec;
+        --line-strong: rgba(23, 25, 28, 0.08);
+        --pos: #3f6f4a;
+        --neg: #a83a2e;
+        --serif: "Source Serif 4", ui-serif, Georgia, serif;
+        --sans:
+          "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+          sans-serif;
+        --ease: cubic-bezier(0.22, 1, 0.36, 1);
+        --sh-float:
+          0 0 0 1px rgba(4, 23, 43, 0.05), 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 8px 10px -6px rgba(0, 0, 0, 0.1);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: var(--fog);
+        color: var(--ink);
+        font-family: var(--sans);
+        font-size: 15px;
+        line-height: 1.5;
+        font-feature-settings: "tnum" 0;
+        -webkit-font-smoothing: antialiased;
+      }
+      ::placeholder {
+        color: var(--smoke);
+      }
+      a {
+        color: var(--ink);
+      }
+      .ic {
+        width: 16px;
+        height: 16px;
+        flex: none;
+        display: inline-block;
+        vertical-align: -3px;
+      }
+      .ic.sm {
+        width: 14px;
+        height: 14px;
+      }
+
+      /* ---------- shell ---------- */
+      .shell {
+        display: grid;
+        grid-template-columns: 248px minmax(0, 1fr);
+        min-height: 100vh;
+      }
+      .sidebar {
+        border-right: 1px solid var(--line);
+        padding: 24px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+      }
+      .wordmark {
+        font-family: var(--serif);
+        font-size: 19px;
+        font-weight: 400;
+        letter-spacing: -0.2px;
+        line-height: 1.2;
+      }
+      .wordmark .arr {
+        font-style: italic;
+      }
+      .status-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 8px;
+        font-size: 13px;
+        color: var(--slate);
+      }
+      .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        flex: none;
+        background: var(--ash);
+      }
+      .dot.live {
+        background: var(--pos);
+      }
+      .dot.dry {
+        background: #c2803a;
+      }
+      nav {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      nav button {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        background: none;
+        border: 0;
+        border-radius: 10px;
+        color: var(--slate);
+        padding: 0 12px;
+        height: 36px;
+        font-size: 14.5px;
+        font-weight: 450;
+        font-family: var(--sans);
+        cursor: pointer;
+        text-align: left;
+        transition:
+          background-color 0.14s var(--ease),
+          color 0.14s var(--ease);
+      }
+      nav button:hover {
+        background: var(--mist);
+        color: var(--ink);
+      }
+      nav button.active {
+        background: var(--paper);
+        color: var(--ink);
+        box-shadow: 0 0 0 1px var(--line);
+      }
+      .side-bottom {
+        margin-top: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .side-account {
+        font-size: 13px;
+        color: var(--slate);
+        padding: 0 12px;
+      }
+      .side-account b {
+        color: var(--ink);
+        font-weight: 500;
+      }
+
+      /* ---------- buttons ---------- */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: var(--paper);
+        border: 1px solid var(--line-strong);
+        color: var(--ink);
+        border-radius: 9999px;
+        padding: 0 20px;
+        height: 40px;
+        font-size: 14.5px;
+        font-weight: 450;
+        font-family: var(--sans);
+        cursor: pointer;
+        text-decoration: none;
+        transition:
+          background-color 0.14s var(--ease),
+          border-color 0.14s var(--ease);
+      }
+      .btn:hover {
+        background: var(--mist);
+      }
+      .btn:active {
+        transform: scale(0.985);
+      }
+      .btn.primary {
+        background: var(--ink);
+        border-color: var(--ink);
+        color: var(--paper);
+      }
+      .btn.primary:hover {
+        background: #2a2d33;
+      }
+      .btn.danger {
+        color: var(--neg);
+      }
+      .btn.small {
+        height: 32px;
+        padding: 0 14px;
+        font-size: 13px;
+      }
+      .btn:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+      button.textlink {
+        background: none;
+        border: 0;
+        padding: 0;
+        font-family: var(--sans);
+        font-size: 13px;
+        font-weight: 450;
+        color: var(--slate);
+        cursor: pointer;
+      }
+      button.textlink:hover {
+        color: var(--ink);
+      }
+      a.textlink {
+        font-size: 14px;
+        font-weight: 450;
+        color: var(--ink);
+        text-decoration: none;
+        padding: 2px 0;
+      }
+      a.textlink:hover {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      :focus-visible {
+        outline: 2px solid rgba(23, 25, 28, 0.4);
+        outline-offset: 2px;
+        border-radius: 4px;
+      }
+
+      main {
+        padding: 32px 40px 64px;
+      }
+      .main-inner {
+        max-width: 1080px;
+        margin: 0 auto;
+        animation: rise 0.4s var(--ease) both;
+      }
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      section[hidden] {
+        display: none;
+      }
+
+      /* ---------- banner / toast ---------- */
+      .banner {
+        border-radius: 24px;
+        padding: 20px 24px;
+        margin-bottom: 32px;
+        font-size: 15px;
+        line-height: 1.55;
+      }
+      .banner.warn {
+        background: var(--peach);
+        color: var(--sienna);
+      }
+      .banner.warn b {
+        font-weight: 500;
+      }
+      .banner.warn a {
+        color: var(--sienna);
+      }
+      .banner.note {
+        background: var(--paper);
+        box-shadow: 0 0 0 1px var(--line);
+        color: var(--slate);
+      }
+      .banner.note b {
+        color: var(--ink);
+        font-weight: 500;
+      }
+      #toast {
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%) translateY(88px);
+        background: var(--paper);
+        box-shadow:
+          0 0 0 1px var(--line-strong),
+          0 8px 24px rgba(0, 0, 0, 0.08);
+        color: var(--ink);
+        padding: 12px 20px;
+        border-radius: 16px;
+        font-size: 14px;
+        transition:
+          transform 0.3s var(--ease),
+          opacity 0.3s var(--ease);
+        opacity: 0;
+        z-index: 50;
+        max-width: min(560px, 90vw);
+      }
+      #toast.show {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+      }
+      #toast.err {
+        color: var(--neg);
+      }
+
+      /* ---------- cards & forms ---------- */
+      .card {
+        background: var(--paper);
+        border-radius: 24px;
+        padding: 28px;
+        margin-bottom: 24px;
+      }
+      .card.flush {
+        padding: 8px 28px 28px;
+      }
+      .card h2 {
+        font-family: var(--serif);
+        font-size: 26px;
+        font-weight: 400;
+        letter-spacing: -0.23px;
+        line-height: 1.18;
+        margin: 0 0 4px;
+      }
+      .card .sub {
+        color: var(--slate);
+        font-size: 14.5px;
+        margin: 0 0 24px;
+        font-weight: 400;
+      }
+      .grid2 {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 400px;
+        gap: 40px;
+        align-items: start;
+      }
+      label {
+        display: block;
+        font-size: 13px;
+        font-weight: 450;
+        color: var(--slate);
+        margin: 20px 0 6px;
+      }
+      label:first-child {
+        margin-top: 0;
+      }
+      label .soft {
+        font-weight: 400;
+        color: var(--ash);
+      }
+      input[type="text"],
+      input[type="url"],
+      input[type="number"],
+      input[type="password"],
+      textarea,
+      select {
+        width: 100%;
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        color: var(--ink);
+        padding: 10px 16px;
+        font-size: 14.5px;
+        font-family: var(--sans);
+        font-weight: 400;
+        transition: border-color 0.14s var(--ease);
+      }
+      textarea {
+        resize: vertical;
+        min-height: 76px;
+        line-height: 1.5;
+      }
+      input:focus,
+      textarea:focus,
+      select:focus {
+        outline: none;
+        border-color: rgba(23, 25, 28, 0.35);
+      }
+      .hint {
+        font-size: 13px;
+        color: var(--ash);
+        margin-top: 6px;
+        line-height: 1.5;
+      }
+      .hint b {
+        font-weight: 500;
+        color: var(--slate);
+      }
+      .row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: flex-end;
+      }
+      .row > * {
+        min-width: 0;
+      }
+
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+      .chips:empty {
+        display: none;
+      }
+      .chip {
+        background: var(--mist);
+        color: var(--ink);
+        border-radius: 6px;
+        padding: 3px 10px;
+        font-size: 13px;
+        display: inline-flex;
+        gap: 6px;
+        align-items: center;
+        font-weight: 450;
+      }
+      .chip button {
+        background: none;
+        border: 0;
+        color: var(--ash);
+        cursor: pointer;
+        padding: 0;
+        display: inline-flex;
+      }
+      .chip button:hover {
+        color: var(--ink);
+      }
+      .chip.tag {
+        background: none;
+        padding: 3px 0;
+        color: var(--ash);
+        font-weight: 400;
+      }
+
+      /* ---------- switch ---------- */
+      .switch {
+        position: relative;
+        width: 40px;
+        height: 24px;
+        flex: none;
+        display: inline-block;
+      }
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .switch span {
+        position: absolute;
+        inset: 0;
+        background: var(--mist);
+        box-shadow: inset 0 0 0 1px var(--line);
+        border-radius: 9999px;
+        transition: background-color 0.15s var(--ease);
+        cursor: pointer;
+      }
+      .switch span:before {
+        content: "";
+        position: absolute;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: var(--paper);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+        top: 2px;
+        left: 2px;
+        transition: transform 0.15s var(--ease);
+      }
+      .switch input:checked + span {
+        background: var(--ink);
+        box-shadow: none;
+      }
+      .switch input:checked + span:before {
+        transform: translateX(16px);
+      }
+
+      /* ---------- tables ---------- */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14.5px;
+      }
+      th {
+        color: var(--ash);
+        text-align: left;
+        font-size: 13px;
+        font-weight: 400;
+        padding: 12px 12px;
+        border-bottom: 1px solid var(--line);
+      }
+      td {
+        padding: 14px 12px;
+        border-bottom: 1px solid var(--line);
+        vertical-align: middle;
+      }
+      tr:last-child td {
+        border-bottom: 0;
+      }
+      .num {
+        font-variant-numeric: tabular-nums;
+        text-align: right;
+      }
+      .tablewrap {
+        overflow-x: auto;
+      }
+
+      /* ---------- automations ---------- */
+      .auto-item {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        padding: 24px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .auto-item:first-child {
+        padding-top: 16px;
+      }
+      .auto-item:last-child {
+        border-bottom: 0;
+      }
+      .thumb {
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+        background: var(--mist);
+        object-fit: cover;
+        flex: none;
+        display: grid;
+        place-items: center;
+        color: var(--ash);
+      }
+      .auto-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .auto-title {
+        font-size: 15.5px;
+        font-weight: 500;
+      }
+      .auto-title .paused {
+        color: var(--ash);
+        font-weight: 400;
+        font-size: 13px;
+        margin-left: 8px;
+      }
+      .auto-meta {
+        color: var(--slate);
+        font-size: 13px;
+        margin-top: 4px;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .auto-meta .mid {
+        font-variant-numeric: tabular-nums;
+      }
+      .mini-funnel {
+        color: var(--ash);
+        font-size: 12.5px;
+        margin-top: 6px;
+        font-variant-numeric: tabular-nums;
+      }
+      .mini-funnel b {
+        color: var(--ink);
+        font-weight: 500;
+      }
+      .stage {
+        font-size: 12.5px;
+        color: var(--slate);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .stage:before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--ash);
+      }
+      .st-commented:before {
+        background: #c4c6cd;
+      }
+      .st-dm_sent:before {
+        background: var(--ash);
+      }
+      .st-tapped:before {
+        background: var(--slate);
+      }
+      .st-asked_follow:before {
+        background: var(--smoke);
+      }
+      .st-link_sent:before,
+      .st-clicked:before {
+        background: var(--sienna);
+      }
+      .dry-chip {
+        font-size: 11px;
+        color: var(--sienna);
+        background: var(--peach);
+        border-radius: 4px;
+        padding: 1px 6px;
+        font-weight: 450;
+      }
+
+      /* ---------- funnel ---------- */
+      .funnel-steps {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding-top: 8px;
+      }
+      .fstep {
+        display: grid;
+        grid-template-columns: 120px 1fr 96px;
+        gap: 16px;
+        align-items: center;
+      }
+      .fstep .lbl {
+        font-size: 14.5px;
+        font-weight: 450;
+      }
+      .fstep .lbl span {
+        display: block;
+        font-size: 12.5px;
+        color: var(--ash);
+        font-weight: 400;
+      }
+      .bar {
+        height: 28px;
+        border-radius: 8px;
+        background: var(--mist);
+        overflow: hidden;
+        position: relative;
+      }
+      .bar > i {
+        position: absolute;
+        inset: 0 auto 0 0;
+        border-radius: 8px;
+        background: var(--sienna);
+        transition: width 0.5s var(--ease);
+      }
+      .fstep .val {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+      .fstep .val b {
+        font-size: 16px;
+        font-weight: 500;
+      }
+      .fstep .val .pct {
+        display: block;
+        color: var(--ash);
+        font-size: 12.5px;
+      }
+
+      /* ---------- activity ---------- */
+      .evt {
+        display: flex;
+        gap: 16px;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--line);
+        font-size: 14px;
+        align-items: baseline;
+      }
+      .evt:first-child {
+        padding-top: 16px;
+      }
+      .evt:last-child {
+        border-bottom: 0;
+      }
+      .evt time {
+        color: var(--ash);
+        font-size: 12.5px;
+        font-variant-numeric: tabular-nums;
+        flex: none;
+        width: 110px;
+      }
+      .evt .t {
+        flex: none;
+        width: 150px;
+      }
+      .evt .d {
+        color: var(--slate);
+        min-width: 0;
+      }
+      .evt .who {
+        color: var(--ash);
+      }
+
+      /* ---------- key-value rows ---------- */
+      .kv {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 12px 0;
+        font-size: 14.5px;
+        border-bottom: 1px solid var(--line);
+        align-items: baseline;
+      }
+      .kv:first-child {
+        padding-top: 4px;
+      }
+      .kv:last-child {
+        border-bottom: 0;
+      }
+      .kv .k {
+        color: var(--slate);
+      }
+      .copy {
+        cursor: pointer;
+        color: var(--slate);
+        font-size: 13px;
+      }
+      .copy:hover {
+        color: var(--ink);
+      }
+
+      /* ---------- reel picker ---------- */
+      .reel-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-height: 280px;
+        overflow-y: auto;
+        margin-top: 12px;
+      }
+      .reel-opt {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        padding: 8px 12px 8px 8px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        cursor: pointer;
+        font-size: 13px;
+        background: var(--paper);
+        transition: background-color 0.14s var(--ease);
+      }
+      .reel-opt:hover {
+        background: var(--mist);
+      }
+      .reel-opt img {
+        width: 44px;
+        height: 44px;
+        border-radius: 8px;
+        object-fit: cover;
+      }
+      .reel-opt .cap {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: var(--slate);
+      }
+      .reel-opt .rid {
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* ---------- radio row ---------- */
+      .radio-row {
+        display: flex;
+        gap: 20px;
+        margin-top: 12px;
+      }
+      .radio-row label {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        font-size: 14px;
+        font-weight: 400;
+        color: var(--ink);
+        margin: 0;
+        cursor: pointer;
+      }
+      .radio-row input {
+        accent-color: var(--ink);
+      }
+
+      /* ---------- phone artifact ---------- */
+      .ptabs {
+        display: flex;
+        gap: 4px;
+        margin: 0 0 16px;
+        background: var(--mist);
+        border-radius: 12px;
+        padding: 4px;
+        width: max-content;
+        max-width: 100%;
+      }
+      .ptabs button {
+        background: none;
+        border: 0;
+        color: var(--slate);
+        border-radius: 8px;
+        padding: 6px 12px;
+        font-size: 13px;
+        font-weight: 450;
+        font-family: var(--sans);
+        cursor: pointer;
+        transition:
+          background-color 0.14s var(--ease),
+          color 0.14s var(--ease);
+      }
+      .ptabs button.active {
+        background: var(--paper);
+        color: var(--ink);
+        box-shadow: 0 0 0 1px var(--line);
+      }
+      .phone {
+        background: var(--paper);
+        border-radius: 24px;
+        box-shadow: var(--sh-float);
+        padding: 16px;
+        position: sticky;
+        top: 32px;
+      }
+      .ph-screen {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        overflow: hidden;
+        color: var(--ink);
+        display: flex;
+        flex-direction: column;
+        height: 620px;
+        background: var(--paper);
+      }
+      .ph-status {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 20px 4px;
+        font-size: 11.5px;
+        font-weight: 500;
+        color: var(--ink);
+      }
+      .ph-head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 16px 12px;
+        border-bottom: 1px solid var(--line);
+        font-size: 14px;
+        font-weight: 500;
+      }
+      .ph-ava {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--mist);
+        flex: none;
+        display: grid;
+        place-items: center;
+        color: var(--slate);
+        font-size: 12px;
+        font-weight: 500;
+      }
+      .ph-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 16px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        background: var(--paper);
+      }
+      .msg {
+        max-width: 78%;
+        padding: 9px 13px;
+        border-radius: 18px;
+        font-size: 13.5px;
+        white-space: pre-wrap;
+        word-break: break-word;
+        line-height: 1.45;
+      }
+      .msg.me {
+        align-self: flex-end;
+        background: linear-gradient(135deg, #a033ff, #ff5280);
+        color: #fff;
+        border-bottom-right-radius: 6px;
+      }
+      .msg.them {
+        align-self: flex-start;
+        background: var(--mist);
+        color: var(--ink);
+        border-bottom-left-radius: 6px;
+      }
+      .msg .u {
+        font-weight: 500;
+        font-size: 12.5px;
+      }
+      .tpl {
+        align-self: flex-end;
+        max-width: 86%;
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        font-size: 13.5px;
+      }
+      .tpl .t {
+        padding: 12px 14px;
+        color: var(--ink);
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+      .tpl .tbtn {
+        display: block;
+        width: 100%;
+        text-align: center;
+        padding: 12px;
+        border-top: 1px solid var(--line);
+        color: #3797f0;
+        font-weight: 450;
+        font-size: 13.5px;
+        background: none;
+        text-decoration: none;
+      }
+      .ph-note {
+        font-size: 11.5px;
+        color: var(--slate);
+        align-self: center;
+        background: var(--mist);
+        border-radius: 9999px;
+        padding: 3px 12px;
+        text-align: center;
+      }
+      .ph-input {
+        border-top: 1px solid var(--line);
+        padding: 12px 16px;
+        font-size: 13px;
+        color: var(--smoke);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .ph-input .phins {
+        color: var(--smoke);
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+
+      /* ---------- misc ---------- */
+      .pill-soft {
+        font-size: 12.5px;
+        color: var(--ash);
+        font-variant-numeric: tabular-nums;
+      }
+      .switchrow {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 14.5px;
+        font-weight: 450;
+        color: var(--ink);
+        cursor: pointer;
+      }
+      .muted {
+        color: var(--ash);
+      }
+      .center-empty {
+        color: var(--ash);
+        padding: 24px 0;
+        font-size: 14.5px;
+      }
+
+      @media (max-width: 960px) {
+        .shell {
+          grid-template-columns: 1fr;
+        }
+        .sidebar {
+          position: static;
+          height: auto;
+          flex-direction: row;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 16px;
+          padding: 16px 20px;
+          border-right: 0;
+          border-bottom: 1px solid var(--line);
+        }
+        .status-row {
+          margin-top: 0;
+        }
+        nav {
+          flex-direction: row;
+          flex-wrap: wrap;
+        }
+        .side-bottom {
+          margin-top: 0;
+          margin-left: auto;
+          flex-direction: row;
+          align-items: center;
+        }
+        main {
+          padding: 24px 20px 56px;
+        }
+        .grid2 {
+          grid-template-columns: 1fr;
+        }
+        .phone {
+          position: static;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="sidebar">
+        <div>
+          <div class="wordmark">SayTheWord</div>
+          <div class="status-row"
+            ><span class="dot" id="mode-dot"></span
+            ><span id="mode-badge">…</span><span id="account-name"></span
+          ></div>
+        </div>
+        <nav id="tabs">
+          <button data-tab="automations" class="active">Automations</button>
+          <button data-tab="funnel">Funnel</button>
+          <button data-tab="contacts">Contacts</button>
+          <button data-tab="activity">Activity</button>
+          <button data-tab="settings">Settings</button>
+        </nav>
+        <div class="side-bottom">
+          <form method="post" action="/admin/logout" style="margin: 0 0 0 12px"
+            ><button class="textlink" type="submit">Sign out</button></form
+          >
+        </div>
+      </aside>
+
+      <main>
+        <div class="main-inner">
+          <div id="banner"></div>
+
+          <!-- ===================== AUTOMATIONS ===================== -->
+          <section id="tab-automations">
+            <div class="card" id="editor-card" hidden>
+              <h2 id="editor-title">New automation</h2>
+              <p class="sub"
+                >One automation per reel. The phone preview updates as you
+                type.</p
+              >
+              <div class="grid2">
+                <div>
+                  <label>Trigger</label>
+                  <div class="radio-row" style="margin: 0 0 12px">
+                    <label
+                      ><input
+                        type="radio"
+                        name="f-attach"
+                        value="media"
+                        checked
+                      />
+                      a reel I pick</label
+                    >
+                    <label
+                      ><input type="radio" name="f-attach" value="next" /> my
+                      next reel</label
+                    >
+                  </div>
+                  <div id="attach-media-fields">
+                    <div class="row">
+                      <input
+                        type="text"
+                        id="f-media-id"
+                        placeholder="Media ID, e.g. 3599…"
+                        style="flex: 1; min-width: 180px"
+                      />
+                      <button class="btn" id="btn-pick-reel" type="button"
+                        >Browse my reels</button
+                      >
+                    </div>
+                    <div id="reel-pick" class="reel-grid" hidden></div>
+                    <div class="hint"
+                      >Browse lists your recent posts, reels first. Or paste a
+                      media ID: open the reel on instagram.com and copy the number
+                      from the URL</div
+                    >
+                  </div>
+                  <div id="attach-next-fields" hidden>
+                    <div class="hint"
+                      >The automation waits, then attaches itself to the first
+                      new reel that gets a matching keyword comment — and runs
+                      there from then on. Reels published before you save this
+                      are skipped</div
+                    >
+                  </div>
+
+                  <label>Name</label>
+                  <input
+                    type="text"
+                    id="f-title"
+                    placeholder="e.g. Meal-prep guide reel"
+                  />
+
+                  <label
+                    >Keywords
+                    <span class="soft"
+                      >— a comment must contain one</span
+                    ></label
+                  >
+                  <div class="chips" id="f-keyword-chips"></div>
+                  <input
+                    type="text"
+                    id="f-keyword-entry"
+                    placeholder="Type a keyword and press Enter — link, guide, send"
+                  />
+
+                  <div class="radio-row">
+                    <label
+                      ><input
+                        type="radio"
+                        name="f-match"
+                        value="contains"
+                        checked
+                      />
+                      contains keyword</label
+                    >
+                    <label
+                      ><input type="radio" name="f-match" value="exact" /> exact
+                      comment</label
+                    >
+                  </div>
+
+                  <label
+                    >Public comment replies
+                    <span class="soft">— one per line, rotated</span></label
+                  >
+                  <textarea
+                    id="f-replies"
+                    rows="3"
+                    placeholder="Got you! Check your DMs 📩"
+                  ></textarea>
+
+                  <label
+                    >Private DM
+                    <span class="soft">— {username} works</span></label
+                  >
+                  <textarea id="f-dm" rows="3"></textarea>
+
+                  <div class="row">
+                    <div style="flex: 1; min-width: 170px">
+                      <label>DM button text</label>
+                      <input type="text" id="f-dm-btn" maxlength="20" />
+                    </div>
+                  </div>
+
+                  <label class="switchrow" style="margin-top: 24px">
+                    <span class="switch"
+                      ><input type="checkbox" id="f-ask-follow" /><span></span
+                    ></span>
+                    Ask them to follow first
+                  </label>
+
+                  <div id="follow-fields">
+                    <label
+                      >Follow prompt
+                      <span class="soft">— {username} works</span></label
+                    >
+                    <textarea id="f-follow-prompt" rows="2"></textarea>
+                    <div class="row">
+                      <div style="flex: 1; min-width: 170px">
+                        <label>"I'm following" button text</label>
+                        <input type="text" id="f-follow-btn" maxlength="20" />
+                      </div>
+                    </div>
+                    <div class="hint"
+                      >Instagram's API can only verify follows if Meta grants
+                      your app the follower-check capability. Otherwise every
+                      user sees this prompt, and the "I'm following" button
+                      unlocks the link on their word</div
+                    >
+                  </div>
+
+                  <label class="switchrow" style="margin-top: 24px">
+                    <span class="switch"
+                      ><input type="checkbox" id="f-ask-email" /><span></span
+                    ></span>
+                    Ask for their email before the link
+                  </label>
+
+                  <div id="email-fields">
+                    <label
+                      >Email prompt
+                      <span class="soft">— {username} works</span></label
+                    >
+                    <textarea id="f-email-prompt" rows="2"></textarea>
+                    <div class="row">
+                      <div style="flex: 1; min-width: 170px">
+                        <label>Skip button text</label>
+                        <input type="text" id="f-skip-btn" maxlength="20" />
+                      </div>
+                    </div>
+                    <div class="hint"
+                      >They reply by typing their email, or tap the skip button
+                      to get the link straight away. Addresses land in Contacts
+                      and export as CSV</div
+                    >
+                  </div>
+
+                  <label
+                    >Link message
+                    <span class="soft">— {username} works</span></label
+                  >
+                  <textarea id="f-link-msg" rows="2"></textarea>
+
+                  <div class="row">
+                    <div style="flex: 2; min-width: 220px">
+                      <label>Link URL (https)</label>
+                      <input
+                        type="url"
+                        id="f-link-url"
+                        placeholder="https://your-site.com/offer"
+                      />
+                    </div>
+                    <div style="flex: 1; min-width: 150px">
+                      <label>Link button text</label>
+                      <input type="text" id="f-link-btn" maxlength="20" />
+                    </div>
+                  </div>
+                  <div class="hint"
+                    >Clicks are tracked automatically: the button routes through
+                    your Worker (/go/…) and then redirects here</div
+                  >
+
+                  <div
+                    class="row"
+                    style="margin-top: 28px; align-items: center"
+                  >
+                    <button class="btn primary" id="btn-save"
+                      >Save automation</button
+                    >
+                    <button class="btn" id="btn-test" type="button"
+                      >Run dry-run test</button
+                    >
+                    <button class="btn" id="btn-cancel" type="button"
+                      >Close</button
+                    >
+                    <label class="switchrow" style="margin: 0 0 0 auto">
+                      <span class="switch"
+                        ><input
+                          type="checkbox"
+                          id="f-enabled"
+                          checked /><span></span
+                      ></span>
+                      Enabled
+                    </label>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="ptabs" id="ptabs">
+                    <button data-p="comment">Comment reply</button>
+                    <button data-p="dm" class="active">Private DM</button>
+                    <button data-p="gate">Follow gate</button>
+                    <button data-p="email">Email step</button>
+                    <button data-p="link">Link</button>
+                  </div>
+                  <div class="phone">
+                    <div class="ph-screen">
+                      <div class="ph-status"
+                        ><span>9:41</span><span>▮▮▮ ⌁ ▰</span></div
+                      >
+                      <div class="ph-head"
+                        ><div class="ph-ava" id="ph-ava">Y</div
+                        ><span id="ph-name">your account</span></div
+                      >
+                      <div class="ph-body" id="ph-body"></div>
+                      <div class="ph-input"
+                        ><span>Message…</span
+                        ><span class="phins">
+                          <svg
+                            class="ic sm"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <path
+                              d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"
+                            />
+                          </svg>
+                          <svg
+                            class="ic sm"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <path d="m22 2-7 20-4-9-9-4Z" />
+                            <path d="M22 2 11 13" />
+                          </svg> </span
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card flush">
+              <div
+                class="row"
+                style="
+                  justify-content: space-between;
+                  align-items: center;
+                  padding: 20px 0 4px 0;
+                "
+              >
+                <div style="padding-left: 20px"
+                  ><h2 style="margin: 0">Automations</h2
+                  ><p class="sub" style="margin: 0"
+                    >Comment keywords trigger a public reply and a DM with your
+                    link</p
+                  ></div
+                >
+                <button
+                  class="btn primary"
+                  id="btn-new"
+                  style="margin-right: 20px"
+                  >New automation</button
+                >
+              </div>
+              <div id="auto-list"></div>
+            </div>
+          </section>
+
+          <!-- ===================== FUNNEL ===================== -->
+          <section id="tab-funnel" hidden>
+            <div class="card">
+              <h2>Overall funnel</h2>
+              <p class="sub"
+                >Commented → DM sent → tapped button → link sent → clicked. Test
+                runs are included; clear them under Settings → Maintenance</p
+              >
+              <div class="funnel-steps" id="funnel-global"></div>
+            </div>
+            <div class="card">
+              <h2>Per automation</h2>
+              <p class="sub">Comment-to-click rate per reel</p>
+              <div class="tablewrap"
+                ><table>
+                  <thead
+                    ><tr
+                      ><th>Automation</th><th class="num">Commented</th
+                      ><th class="num">DM sent</th><th class="num">Tapped</th
+                      ><th class="num">Link sent</th><th class="num">Clicked</th
+                      ><th class="num">Comment → click</th></tr
+                    ></thead
+                  >
+                  <tbody id="funnel-rows"></tbody> </table
+              ></div>
+            </div>
+          </section>
+
+          <!-- ===================== CONTACTS ===================== -->
+          <section id="tab-contacts" hidden>
+            <div class="card flush">
+              <div
+                class="row"
+                style="
+                  justify-content: space-between;
+                  align-items: center;
+                  padding: 20px 0 4px 0;
+                "
+              >
+                <div style="padding-left: 20px"
+                  ><h2 style="margin: 0">Contacts</h2
+                  ><p class="sub" style="margin: 0"
+                    >People who commented a keyword. Users can also DM "delete
+                    my data" to wipe themselves</p
+                  ></div
+                >
+                <div
+                  style="
+                    display: flex;
+                    gap: 12px;
+                    align-items: center;
+                    margin-right: 20px;
+                  "
+                >
+                  <input
+                    type="text"
+                    id="contact-search"
+                    placeholder="Search"
+                    style="width: 200px"
+                  />
+                  <button class="btn small" id="btn-csv" type="button"
+                    >Download CSV</button
+                  >
+                </div>
+              </div>
+              <div class="tablewrap"
+                ><table>
+                  <thead
+                    ><tr
+                      ><th>User</th><th>Stage</th><th>Follows</th
+                      ><th>Email</th><th class="num">Flows</th
+                      ><th>First seen</th><th>Last seen</th><th></th></tr
+                  ></thead>
+                  <tbody id="contact-rows"></tbody> </table
+              ></div>
+            </div>
+          </section>
+
+          <!-- ===================== ACTIVITY ===================== -->
+          <section id="tab-activity" hidden>
+            <div class="card flush">
+              <div
+                class="row"
+                style="
+                  justify-content: space-between;
+                  align-items: center;
+                  padding: 20px 0 4px 0;
+                "
+              >
+                <div style="padding-left: 20px"
+                  ><h2 style="margin: 0">Activity</h2
+                  ><p class="sub" style="margin: 0"
+                    >Everything the bot does — errors show up here</p
+                  ></div
+                >
+                <button
+                  class="btn small"
+                  id="btn-refresh-events"
+                  style="margin-right: 20px"
+                  >Refresh</button
+                >
+              </div>
+              <div id="event-list"></div>
+            </div>
+          </section>
+
+          <!-- ===================== SETTINGS ===================== -->
+          <section id="tab-settings" hidden>
+            <div class="card">
+              <h2>Instagram connection</h2>
+              <p class="sub" id="conn-sub">…</p>
+              <div class="row">
+                <a class="btn primary" id="btn-oauth" href="/auth/start"
+                  >Connect Instagram account</a
+                >
+              </div>
+              <label>Or paste a long-lived access token</label>
+              <textarea id="f-token" rows="2" placeholder="IGAAW…"></textarea>
+              <div class="hint"
+                >Long-lived tokens last 60 days; the weekly cron refreshes them
+                automatically</div
+              >
+              <div class="row" style="margin-top: 16px">
+                <button class="btn" id="btn-save-token">Save token</button>
+                <button class="btn danger" id="btn-disconnect" type="button"
+                  >Disconnect</button
+                >
+              </div>
+            </div>
+
+            <div class="card">
+              <h2>Meta webhook configuration</h2>
+              <p class="sub"
+                >Paste these in your Meta app, under Instagram → Webhooks</p
+              >
+              <div class="kv"
+                ><span class="k">Callback URL</span
+                ><span
+                  ><span id="wh-url">…</span> ·
+                  <span class="copy" id="copy-url">copy</span></span
+                ></div
+              >
+              <div class="kv"
+                ><span class="k">Verify token</span
+                ><span>Your WEBHOOK_VERIFY_TOKEN secret</span></div
+              >
+              <div class="kv"
+                ><span class="k">Subscribe fields</span
+                ><span>comments · messages · messaging_postbacks</span></div
+              >
+              <div class="hint"
+                >Signature check (X-Hub-Signature-256) is enforced on every
+                webhook using your APP_SECRET</div
+              >
+            </div>
+
+            <div class="card">
+              <h2>Preferences</h2>
+              <p class="sub">Saved per field group</p>
+              <div class="row">
+                <div style="flex: 1; min-width: 150px">
+                  <label>Follow-up delay (minutes)</label>
+                  <input type="number" id="s-nudge" min="0" max="10080" />
+                  <div class="hint"
+                    >One nudge, only if they never reached the link</div
+                  >
+                </div>
+                <div style="flex: 1; min-width: 150px">
+                  <label>Meta App ID</label>
+                  <input type="text" id="s-app-id" placeholder="1234567890" />
+                </div>
+              </div>
+              <div class="row" style="margin-top: 4px">
+                <div style="flex: 1; min-width: 220px">
+                  <label
+                    >Public URL
+                    <span class="soft"
+                      >— for tracked /go/ links, defaults to your workers.dev
+                      URL</span
+                    ></label
+                  >
+                  <input
+                    type="url"
+                    id="s-public-url"
+                    placeholder="https://saytheword.yoursub.workers.dev"
+                  />
+                </div>
+                <div style="width: 130px">
+                  <label>Graph version</label>
+                  <input type="text" id="s-graph" placeholder="v26.0" />
+                </div>
+              </div>
+              <div class="row" style="margin-top: 20px"
+                ><button class="btn primary" id="btn-save-settings"
+                  >Save preferences</button
+                ></div
+              >
+            </div>
+
+            <div class="card">
+              <h2>Maintenance</h2>
+              <p class="sub"
+                >Test runs and dry-run activity are flagged so you can wipe them
+                before real traffic</p
+              >
+              <div class="row">
+                <button class="btn danger" id="btn-clear-test" type="button"
+                  >Clear test data</button
+                >
+                <button
+                  class="btn"
+                  id="btn-force-nudges"
+                  type="button"
+                  title="Makes pending follow-ups due immediately so you can watch the cron fire"
+                  >Force nudges due now</button
+                >
+                <button
+                  class="btn danger"
+                  id="btn-reset-activity"
+                  type="button"
+                  title="Wipes contacts, flows, events and funnel stats. Keeps automations and your connection."
+                  >Reset all activity data</button
+                >
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <div id="toast"></div>
+
+    <script>
+      "use strict";
+      const $ = (s, el) => (el || document).querySelector(s);
+      const $$ = (s, el) => Array.from((el || document).querySelectorAll(s));
+      let S = null; // admin state from /state
+      let draft = null; // automation being edited
+      let editingId = null;
+      let pane = "dm";
+      let reels = [];
+
+      const I = {
+        x: '<svg class="ic sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>',
+        video:
+          '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2"/></svg>',
+      };
+
+      const DEFAULTS = {
+        media_id: "",
+        title: "",
+        keywords: [],
+        match_mode: "contains",
+        public_replies: [
+          "Got you! Check your DMs 📩",
+          "Just sent it — check your DMs 💌",
+          "Sent! Check your DMs 👀",
+        ],
+        dm_message:
+          "Hey {username}! 👋 Thanks for commenting — tap the button below and I'll send you the link.",
+        dm_button_text: "Send me the link",
+        ask_follow: true,
+        follow_prompt:
+          "Quick one first — follow me, then tap the button below and I'll send your link right over 🙌",
+        follow_button_text: "I'm following",
+        ask_email: false,
+        email_prompt:
+          "Quick one before the link — drop your email below and I'll send the next guide straight to your inbox. Or skip it",
+        skip_button_text: "Skip, send the link",
+        link_message: "Here's your link 🔗 Enjoy!",
+        link_url: "",
+        link_button_text: "Open the link",
+        attach: "media",
+        enabled: true,
+        thumb_url: "",
+      };
+
+      function esc(s) {
+        return String(s ?? "").replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      }
+      function fmtTs(t) {
+        return t
+          ? new Date(Number(t)).toLocaleString(undefined, {
+              month: "short",
+              day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            })
+          : "—";
+      }
+      function ago(t) {
+        if (!t) return "—";
+        const s = (Date.now() - Number(t)) / 1e3;
+        if (s < 90) return "just now";
+        if (s < 3600) return Math.round(s / 60) + "m ago";
+        if (s < 86400) return Math.round(s / 3600) + "h ago";
+        return Math.round(s / 86400) + "d ago";
+      }
+      function toast(msg, err) {
+        const t = $("#toast");
+        t.textContent = msg;
+        t.classList.toggle("err", !!err);
+        t.classList.add("show");
+        clearTimeout(t._h);
+        t._h = setTimeout(() => t.classList.remove("show"), 3400);
+      }
+
+      async function api(path, opts = {}) {
+        const res = await fetch("/admin/api" + path, {
+          method: opts.method || "GET",
+          headers: { "content-type": "application/json" },
+          body: opts.body ? JSON.stringify(opts.body) : undefined,
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || "HTTP " + res.status);
+        return data;
+      }
+
+      /* ---------------- render shell ---------------- */
+      function renderAll() {
+        const live = S.mode === "live";
+        const badge = $("#mode-badge");
+        badge.textContent = live ? "Live" : "Dry run";
+        const dot = $("#mode-dot");
+        dot.className = "dot " + (live ? "live" : "dry");
+        $("#account-name").textContent =
+          S.account && S.account.username ? "· @" + S.account.username : "";
+        $("#ph-name").textContent =
+          S.account && S.account.username
+            ? "@" + S.account.username
+            : "your account";
+        $("#ph-ava").textContent = (
+          S.account && S.account.username ? S.account.username[0] : "Y"
+        ).toUpperCase();
+        const csvBtn = $("#btn-csv");
+        if (csvBtn)
+          csvBtn.textContent = S.funnel.emails
+            ? `Download CSV (${S.funnel.emails})`
+            : "Download CSV";
+
+        let b = "";
+        if (!S.connected)
+          b = `<div class="banner warn"><b>Dry run</b> — the bot processes comments and shows the full funnel, but sends nothing. Connect your Instagram account in <a href="#" data-goto="settings">Settings</a> to go live</div>`;
+        else if (!live)
+          b = `<div class="banner note"><b>Paused</b> — a token is connected but sends are off. Turn live mode on in Settings</div>`;
+        $("#banner").innerHTML = b;
+
+        renderAutoList();
+        renderFunnel();
+        renderSettings();
+        renderPreview();
+      }
+
+      /* ---------------- automations ---------------- */
+      function miniFunnel(f) {
+        return `<b>${f.commented}</b> commented · <b>${f.dm_sent}</b> DM · <b>${f.tapped}</b> tapped · <b>${f.link_sent}</b> link · <b>${f.clicked}</b> clicked`;
+      }
+      function renderAutoList() {
+        const el = $("#auto-list");
+        if (!S.automations.length) {
+          el.innerHTML = `<p class="center-empty" style="padding:8px 20px 28px">No automations yet. Pick a reel, add a keyword like "link", write your DM</p>`;
+          return;
+        }
+        el.innerHTML = S.automations
+          .map(
+            (a) => `
+    <div class="auto-item">
+      ${a.thumb_url ? `<img class="thumb" src="${esc(a.thumb_url)}" alt="">` : `<div class="thumb">${I.video}</div>`}
+      <div class="auto-info">
+        <div class="auto-title">${esc(a.title || (a.attach === "next" ? "My next reel" : "Reel " + a.media_id))}${a.attach === "next" ? `<span class="paused">waiting for next reel</span>` : ""}${a.enabled ? "" : `<span class="paused">paused</span>`}</div>
+        <div class="auto-meta">
+          ${a.attach === "next" ? "" : `<span class="mid">ID ${esc(a.media_id)}</span>`}
+          ${a.keywords.map((k) => `<span class="chip tag">${esc(k)}</span>`).join("")}
+          ${a.ask_follow ? `<span class="tag" style="font-size:13px;color:var(--ash)">follow gate</span>` : ""}
+          ${a.ask_email ? `<span class="tag" style="font-size:13px;color:var(--ash)">email step</span>` : ""}
+        </div>
+        <div class="mini-funnel">${miniFunnel(a.funnel)}</div>
+      </div>
+      <div style="display:flex;gap:16px;align-items:center">
+        ${a.attach !== "next" ? `<button class="textlink" data-catchup="${esc(a.id)}">DM earlier comments</button>` : ""}
+        <button class="textlink" data-edit="${esc(a.id)}">Edit</button>
+        <button class="textlink" data-del="${esc(a.id)}" style="color:var(--neg)">Delete</button>
+      </div>
+    </div>`,
+          )
+          .join("");
+        $$("[data-catchup]").forEach(
+          (b) =>
+            (b.onclick = async () => {
+              if (
+                !confirm(
+                  "DM everyone who commented a keyword on this reel in the last 7 days and hasn't received the link?",
+                )
+              )
+                return;
+              try {
+                const r = await api(
+                  "/automations/" + b.dataset.catchup + "/catch-up",
+                  { method: "POST" },
+                );
+                toast(
+                  `Catch-up done: ${r.dm} DM started of ${r.matched} matching comments (${r.already} already had the link, ${r.skippedOld} older than 7 days)`,
+                );
+                refresh();
+                loadEvents();
+              } catch (err) {
+                toast(err.message, true);
+              }
+            }),
+        );
+        $$("[data-edit]").forEach(
+          (b) => (b.onclick = () => startEdit(b.dataset.edit)),
+        );
+        $$("[data-del]").forEach(
+          (b) =>
+            (b.onclick = async () => {
+              if (
+                !confirm(
+                  "Delete this automation? Existing contact flows are kept.",
+                )
+              )
+                return;
+              await api("/automations/" + b.dataset.del, { method: "DELETE" });
+              toast("Automation deleted");
+              refresh();
+            }),
+        );
+      }
+
+      function startNew() {
+        editingId = null;
+        draft = JSON.parse(JSON.stringify(DEFAULTS));
+        openEditor("New automation");
+      }
+      function startEdit(id) {
+        const a = S.automations.find((x) => x.id === id);
+        if (!a) return;
+        editingId = id;
+        draft = {
+          ...JSON.parse(JSON.stringify(DEFAULTS)),
+          ...a,
+          funnel: undefined,
+        };
+        openEditor("Edit automation");
+      }
+      function openEditor(title) {
+        $("#editor-title").textContent = title;
+        $$("input[name=f-attach]").forEach(
+          (r) => (r.checked = r.value === (draft.attach || "media")),
+        );
+        $("#f-media-id").value = draft.attach === "next" ? "" : draft.media_id;
+        $("#f-title").value = draft.title;
+        $("#f-replies").value = draft.public_replies.join("\n");
+        $("#f-dm").value = draft.dm_message;
+        $("#f-dm-btn").value = draft.dm_button_text;
+        $("#f-ask-follow").checked = !!draft.ask_follow;
+        $("#f-follow-prompt").value = draft.follow_prompt;
+        $("#f-follow-btn").value = draft.follow_button_text;
+        $("#f-ask-email").checked = !!draft.ask_email;
+        $("#f-email-prompt").value = draft.email_prompt;
+        $("#f-skip-btn").value = draft.skip_button_text;
+        $("#f-link-msg").value = draft.link_message;
+        $("#f-link-url").value = draft.link_url;
+        $("#f-link-btn").value = draft.link_button_text;
+        $("#f-enabled").checked = !!draft.enabled;
+        $$("input[name=f-match]").forEach(
+          (r) => (r.checked = r.value === (draft.match_mode || "contains")),
+        );
+        $("#editor-card").hidden = false;
+        $("#editor-card").scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+        renderChips();
+        syncAttachFields();
+        syncFollowFields();
+        syncEmailFields();
+        renderPreview();
+      }
+      function syncAttachFields() {
+        const next =
+          $$("input[name=f-attach]").find((r) => r.checked).value === "next";
+        $("#attach-media-fields").style.display = next ? "none" : "";
+        $("#attach-next-fields").style.display = next ? "" : "none";
+      }
+      function syncFollowFields() {
+        $("#follow-fields").style.display = $("#f-ask-follow").checked
+          ? ""
+          : "none";
+      }
+      function syncEmailFields() {
+        $("#email-fields").style.display = $("#f-ask-email").checked
+          ? ""
+          : "none";
+      }
+      function renderChips() {
+        $("#f-keyword-chips").innerHTML = draft.keywords
+          .map(
+            (k, i) =>
+              `<span class="chip">${esc(k)}<button data-kc="${i}" type="button" aria-label="Remove ${esc(k)}">${I.x}</button></span>`,
+          )
+          .join("");
+        $$("#f-keyword-chips [data-kc]").forEach(
+          (b) =>
+            (b.onclick = () => {
+              draft.keywords.splice(+b.dataset.kc, 1);
+              renderChips();
+              renderPreview();
+            }),
+        );
+      }
+      function collectDraft() {
+        draft.attach = $$("input[name=f-attach]").find(
+          (r) => r.checked,
+        ).value;
+        draft.media_id =
+          draft.attach === "next" ? "" : $("#f-media-id").value.trim();
+        draft.title = $("#f-title").value.trim();
+        draft.match_mode = $$("input[name=f-match]").find(
+          (r) => r.checked,
+        ).value;
+        draft.public_replies = $("#f-replies")
+          .value.split("\n")
+          .map((s) => s.trim())
+          .filter(Boolean);
+        draft.dm_message = $("#f-dm").value;
+        draft.dm_button_text =
+          $("#f-dm-btn").value.trim() || "Send me the link";
+        draft.ask_follow = $("#f-ask-follow").checked;
+        draft.follow_prompt = $("#f-follow-prompt").value;
+        draft.follow_button_text =
+          $("#f-follow-btn").value.trim() || "I'm following";
+        draft.ask_email = $("#f-ask-email").checked;
+        draft.email_prompt = $("#f-email-prompt").value;
+        draft.skip_button_text =
+          $("#f-skip-btn").value.trim() || "Skip, send the link";
+        draft.link_message = $("#f-link-msg").value;
+        draft.link_url = $("#f-link-url").value.trim();
+        draft.link_button_text =
+          $("#f-link-btn").value.trim() || "Open the link";
+        draft.enabled = $("#f-enabled").checked;
+      }
+
+      /* ---------------- phone preview ---------------- */
+      function card(text, btn, web) {
+        return `<div class="tpl"><div class="t">${esc(text)}</div><a class="tbtn ${web ? "web" : ""}" href="#" onclick="return false">${esc(btn)}</a></div>`;
+      }
+      function renderPreview() {
+        if (!draft) return;
+        collectDraftQuiet();
+        const d = draft;
+        const uname = "commenting_user";
+        const kw = d.keywords[0] || "LINK";
+        const body = $("#ph-body");
+        const t = (s) => (s || "").replace(/\{username\}/g, "there");
+
+        let html = "";
+        if (pane === "comment") {
+          html =
+            `<div class="ph-note">Comment on your reel</div>
+      <div class="msg them"><span class="u">${esc(uname)}</span> ${esc(kw)}</div>
+      <div class="ph-note">Public reply</div>` +
+            (d.public_replies[0]
+              ? `<div class="msg me">${esc(t(d.public_replies[0]))}</div>`
+              : `<div class="ph-note">no public replies configured</div>`);
+        } else if (pane === "dm") {
+          html =
+            `<div class="ph-note">Private reply · includes a link to the reel</div>` +
+            card(t(d.dm_message), d.dm_button_text);
+        } else if (pane === "gate") {
+          html = d.ask_follow
+            ? `<div class="ph-note">After they tap "${esc(d.dm_button_text)}"</div>` +
+              card(t(d.follow_prompt), d.follow_button_text)
+            : `<div class="ph-note">Follow gate is off — everyone gets the link</div>`;
+        } else if (pane === "email") {
+          html = d.ask_email
+            ? `<div class="ph-note">Before the link · they reply by typing their email</div>` +
+              card(t(d.email_prompt), d.skip_button_text || "Skip, send the link")
+            : `<div class="ph-note">Email step is off</div>`;
+        } else {
+          html =
+            `<div class="ph-note">Link delivery · clicks tracked via /go/ redirect</div>` +
+            card(t(d.link_message), d.link_button_text, true);
+        }
+        body.innerHTML = html;
+      }
+      function collectDraftQuiet() {
+        draft.match_mode = $$("input[name=f-match]").find(
+          (r) => r.checked,
+        ).value;
+        draft.public_replies = $("#f-replies")
+          .value.split("\n")
+          .map((s) => s.trim())
+          .filter(Boolean);
+        draft.dm_message = $("#f-dm").value;
+        draft.dm_button_text = $("#f-dm-btn").value;
+        draft.ask_follow = $("#f-ask-follow").checked;
+        draft.follow_prompt = $("#f-follow-prompt").value;
+        draft.follow_button_text = $("#f-follow-btn").value;
+        draft.ask_email = $("#f-ask-email").checked;
+        draft.email_prompt = $("#f-email-prompt").value;
+        draft.skip_button_text = $("#f-skip-btn").value;
+        draft.link_message = $("#f-link-msg").value;
+        draft.link_url = $("#f-link-url").value;
+        draft.link_button_text = $("#f-link-btn").value;
+      }
+
+      /* ---------------- funnel ---------------- */
+      function renderFunnel() {
+        const steps = [
+          ["commented", "Commented", "total"],
+          ["dm_sent", "DM sent", ""],
+          ["tapped", "Tapped button", ""],
+          ["link_sent", "Link sent", ""],
+          ["clicked", "Clicked link", ""],
+        ];
+        const f = S.funnel;
+        const base = Math.max(1, f.commented);
+        $("#funnel-global").innerHTML =
+          steps
+            .map(([k, lbl], i) => {
+              const v = f[k] || 0;
+              const pct =
+                i === 0
+                  ? 100
+                  : Math.round(
+                      (v / Math.max(1, f[steps[i - 1][0]] || 1)) * 100,
+                    );
+              const w = Math.max(2, Math.round((v / base) * 100));
+              return `<div class="fstep"><div class="lbl">${lbl}</div><div class="bar"><i style="width:${w}%"></i></div><div class="val"><b>${v}</b><span class="pct">${i === 0 ? "of all comments" : pct + "% of previous"}</span></div></div>`;
+            })
+            .join("") +
+          `<div class="fstep"><div class="lbl">Emails collected</div><div><span class="muted" style="font-size:13px">captured before the link · export from Contacts</span></div><div class="val"><b>${f.emails || 0}</b></div></div>`;
+        $("#funnel-rows").innerHTML = S.automations.length
+          ? S.automations
+              .map((a) => {
+                const F = a.funnel,
+                  rate = F.commented
+                    ? Math.round((F.clicked / F.commented) * 100) + "%"
+                    : "—";
+                return `<tr><td><b style="font-weight:500">${esc(a.title)}</b><div class="muted" style="font-size:12.5px">ID ${esc(a.media_id)}</div></td>
+      <td class="num">${F.commented}</td><td class="num">${F.dm_sent}</td><td class="num">${F.tapped}</td><td class="num">${F.link_sent}</td><td class="num">${F.clicked}</td><td class="num">${rate}</td></tr>`;
+              })
+              .join("")
+          : `<tr><td colspan="7" class="muted">No automations yet</td></tr>`;
+      }
+
+      /* ---------------- contacts ---------------- */
+      async function loadContacts(q) {
+        const data = await api(
+          "/contacts" + (q ? "?q=" + encodeURIComponent(q) : ""),
+        );
+        const stageCls = (s) => "stage st-" + (s || "commented");
+        $("#contact-rows").innerHTML = data.contacts.length
+          ? data.contacts
+              .map(
+                (c) => `
+    <tr>
+      <td><b style="font-weight:500">${esc(c.username || "(unknown)")}</b><div class="muted" style="font-size:12.5px">${esc(c.igsid)}</div></td>
+      <td>${c.stage ? `<span class="${stageCls(c.stage)}">${esc(c.stage).replace(/_/g, " ")}</span>` : "—"}</td>
+      <td>${c.follows_confirmed ? "Yes" : "—"}</td>
+      <td>${c.email ? esc(c.email) : "—"}</td>
+      <td class="num">${c.flows_n}</td>
+      <td>${ago(c.first_seen)}</td><td>${ago(c.last_seen)}</td>
+      <td><button class="textlink" data-delc="${esc(c.igsid)}" style="color:var(--neg)">Delete</button></td>
+    </tr>`,
+              )
+              .join("")
+          : `<tr><td colspan="8" class="muted">No contacts yet</td></tr>`;
+        $$("[data-delc]").forEach(
+          (b) =>
+            (b.onclick = async () => {
+              if (!confirm("Delete this contact and all their flows?")) return;
+              await api(
+                "/contacts/" + encodeURIComponent(b.dataset.delc) + "/delete",
+                { method: "POST" },
+              );
+              toast("Contact deleted");
+              loadContacts($("#contact-search").value);
+            }),
+        );
+      }
+
+      /* ---------------- activity ---------------- */
+      const EVT_COLORS = {
+        commented: "st-dm_sent",
+        dm_sent: "st-dm_sent",
+        tapped: "st-tapped",
+        asked_follow: "st-asked_follow",
+        link_sent: "st-link_sent",
+        clicked: "st-clicked",
+        comment_replied: "st-link_sent",
+        follow_confirmed: "st-link_sent",
+        postback: "st-commented",
+        dm_received: "st-commented",
+        comment_no_keyword: "st-commented",
+        comment_ignored: "st-commented",
+        comment_repeat: "st-commented",
+        nudge_sent: "st-tapped",
+        test_completed: "st-commented",
+        follow_check: "st-asked_follow",
+        asked_email: "st-asked_follow",
+        email_captured: "st-link_sent",
+        email_skipped: "st-link_sent",
+        email_reprompt: "st-commented",
+        next_attached: "st-link_sent",
+        next_skipped_old: "st-commented",
+        catchup_run: "st-commented",
+      };
+      async function loadEvents() {
+        const data = await api("/events");
+        $("#event-list").innerHTML = data.events.length
+          ? data.events
+              .map(
+                (e) => `
+    <div class="evt">
+      <time>${fmtTs(e.ts)}</time>
+      <span class="t"><span class="stage ${EVT_COLORS[e.type] || "st-commented"}">${esc(e.type).replace(/_/g, " ")}</span></span>
+      <span class="d">${e.dry ? `<span class="dry-chip">dry</span> ` : ""}${esc(e.detail)}${e.igsid ? ` <span class="who">· ${esc(e.username || e.igsid)}</span>` : ""}</span>
+    </div>`,
+              )
+              .join("")
+          : `<p class="center-empty" style="padding:8px 20px 28px">Nothing yet. Comment a keyword on your reel, or run a test</p>`;
+      }
+
+      /* ---------------- settings ---------------- */
+      function renderSettings() {
+        $("#conn-sub").textContent = S.connected
+          ? `Connected${S.account && S.account.username ? ` as @${S.account.username}` : ""} · token ${S.token_updated_at ? "refreshed " + ago(S.token_updated_at) : "saved"} · mode: ${S.mode}`
+          : "Not connected — the bot stays in dry-run until a long-lived token is saved";
+        $("#btn-oauth").style.display = S.settings.app_id ? "" : "none";
+        if (!S.settings.app_id)
+          $("#btn-oauth").insertAdjacentHTML(
+            "afterend",
+            `<span class="hint" id="oauth-hint" style="margin:0">Add your Meta App ID below to enable one-click connect</span>`,
+          );
+        else {
+          const h = $("#oauth-hint");
+          if (h) h.remove();
+        }
+        $("#f-token").value = "";
+        $("#s-nudge").value = S.settings.nudge_minutes;
+        $("#s-app-id").value = S.settings.app_id || "";
+        $("#s-public-url").value = S.settings.public_url || "";
+        $("#s-graph").value = S.settings.graph_version || "v26.0";
+        $("#wh-url").textContent =
+          (S.origin || "https://your-worker.workers.dev") + "/webhook";
+      }
+
+      /* ---------------- wiring ---------------- */
+      $("#tabs").addEventListener("click", (e) => {
+        const b = e.target.closest("button[data-tab]");
+        if (!b) return;
+        $$("#tabs button").forEach((x) =>
+          x.classList.toggle("active", x === b),
+        );
+        $$("main > .main-inner > section").forEach(
+          (s) => (s.hidden = s.id !== "tab-" + b.dataset.tab),
+        );
+        if (b.dataset.tab === "contacts")
+          loadContacts($("#contact-search").value);
+        if (b.dataset.tab === "activity") loadEvents();
+        if (b.dataset.tab === "settings") renderSettings();
+      });
+      $("#banner").addEventListener("click", (e) => {
+        const a = e.target.closest("[data-goto]");
+        if (!a) return;
+        $$("#tabs button")
+          .find((x) => x.dataset.tab === a.dataset.goto)
+          .click();
+      });
+      $("#ptabs").addEventListener("click", (e) => {
+        const b = e.target.closest("button[data-p]");
+        if (!b) return;
+        $$("#ptabs button").forEach((x) =>
+          x.classList.toggle("active", x === b),
+        );
+        pane = b.dataset.p;
+        renderPreview();
+      });
+      $("#btn-new").onclick = startNew;
+      $("#btn-cancel").onclick = () => {
+        $("#editor-card").hidden = true;
+        draft = null;
+      };
+      $("#f-keyword-entry").addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === ",") {
+          e.preventDefault();
+          const v = e.target.value.trim().replace(/,/g, "");
+          if (v && !draft.keywords.includes(v)) {
+            draft.keywords.push(v);
+            renderChips();
+          }
+          e.target.value = "";
+        }
+      });
+      $("#f-ask-follow").onchange = syncFollowFields;
+      $("#f-ask-email").onchange = syncEmailFields;
+      $$("input[name=f-attach]").forEach(
+        (r) => (r.onchange = syncAttachFields),
+      );
+      [
+        "f-media-id",
+        "f-title",
+        "f-replies",
+        "f-dm",
+        "f-dm-btn",
+        "f-follow-prompt",
+        "f-follow-btn",
+        "f-email-prompt",
+        "f-skip-btn",
+        "f-link-msg",
+        "f-link-url",
+        "f-link-btn",
+      ].forEach((id) => {
+        $("#" + id).addEventListener("input", () => {
+          if (pane !== "comment") renderPreview();
+        });
+      });
+      $("#f-media-id").addEventListener("change", renderPreview);
+
+      $("#btn-save").onclick = async () => {
+        try {
+          collectDraft();
+          const r = await api("/automations", { method: "POST", body: draft });
+          toast("Automation saved");
+          editingId = r.id;
+          await refresh();
+          startEdit(r.id);
+        } catch (err) {
+          toast(err.message, true);
+        }
+      };
+      $("#btn-test").onclick = async () => {
+        try {
+          collectDraft();
+          if (!$("#editor-card").hidden && draft.media_id) {
+            await api("/automations", {
+              method: "POST",
+              body: { ...draft, id: editingId || undefined },
+            });
+          }
+          const r = await api("/test", {
+            method: "POST",
+            body: {
+              media_id: draft.media_id,
+              text: draft.keywords[0] || "LINK",
+            },
+          });
+          toast("Test run done — see Activity. Nothing was sent");
+          await refresh();
+          loadEvents();
+        } catch (err) {
+          toast(err.message, true);
+        }
+      };
+
+      $("#btn-pick-reel").onclick = async () => {
+        const box = $("#reel-pick");
+        if (!box.hidden) {
+          box.hidden = true;
+          return;
+        }
+        box.hidden = false;
+        box.innerHTML = `<div style="color:var(--slate);padding:8px 4px">Loading your reels…</div>`;
+        try {
+          if (!reels.length) {
+            const r = await api("/reels");
+            reels = r.reels;
+          }
+          box.innerHTML = reels.length
+            ? reels
+                .map(
+                  (m) => `
+      <div class="reel-opt" data-mid="${esc(m.id)}" data-cap="${esc((m.caption || "").slice(0, 80))}" data-thumb="${esc(m.thumbnail_url || "")}">
+        ${m.thumbnail_url ? `<img src="${esc(m.thumbnail_url)}" alt="">` : `<div class="thumb" style="width:44px;height:44px">${I.video}</div>`}
+        <div style="min-width:0"><b style="font-weight:450">${esc(m.media_product_type || "MEDIA")} <span class="rid">${esc(m.id)}</span></b><div class="cap">${esc((m.caption || "(no caption)").slice(0, 80))}</div></div>
+      </div>`,
+                )
+                .join("")
+            : `<div style="color:var(--slate);padding:8px 4px">No posts returned — is this a professional account with posts?</div>`;
+          $$(".reel-opt").forEach(
+            (o) =>
+              (o.onclick = () => {
+                $("#f-media-id").value = o.dataset.mid;
+                $("#f-title").value = o.dataset.cap || "Reel " + o.dataset.mid;
+                draft.thumb_url = o.dataset.thumb || "";
+                box.hidden = true;
+                renderPreview();
+              }),
+          );
+        } catch (err) {
+          box.innerHTML = `<div style="color:var(--slate);padding:8px 4px">${esc(err.message)} — paste the media ID manually instead</div>`;
+        }
+      };
+
+      let searchTimer;
+      $("#contact-search").addEventListener("input", (e) => {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(() => loadContacts(e.target.value), 250);
+      });
+      $("#btn-refresh-events").onclick = loadEvents;
+      $("#btn-csv").onclick = () => {
+        location.href = "/admin/api/emails.csv";
+      };
+
+      $("#btn-save-token").onclick = async () => {
+        try {
+          await api("/token", {
+            method: "POST",
+            body: { access_token: $("#f-token").value },
+          });
+          toast("Token saved — live mode on");
+          reels = [];
+          refresh();
+        } catch (err) {
+          toast(err.message, true);
+        }
+      };
+      $("#btn-disconnect").onclick = async () => {
+        if (
+          !confirm(
+            "Disconnect Instagram? The bot stops sending (dry-run) until you reconnect.",
+          )
+        )
+          return;
+        await api("/disconnect", { method: "POST" });
+        toast("Disconnected — dry-run mode");
+        refresh();
+      };
+      $("#btn-save-settings").onclick = async () => {
+        try {
+          await api("/settings", {
+            method: "POST",
+            body: {
+              nudge_minutes: Number($("#s-nudge").value) || 0,
+              app_id: $("#s-app-id").value.trim(),
+              public_url: $("#s-public-url").value.trim(),
+              graph_version: $("#s-graph").value.trim(),
+            },
+          });
+          toast("Preferences saved");
+          refresh();
+        } catch (err) {
+          toast(err.message, true);
+        }
+      };
+      $("#btn-clear-test").onclick = async () => {
+        if (!confirm("Delete all test contacts, flows and events?")) return;
+        await api("/clear-test-data", { method: "POST" });
+        toast("Test data cleared");
+        refresh();
+      };
+      $("#btn-force-nudges").onclick = async () => {
+        const r = await api("/force-nudges", { method: "POST" });
+        toast(
+          r.due +
+            " follow-up(s) due now — the cron picks them up within a minute",
+        );
+      };
+      $("#btn-reset-activity").onclick = async () => {
+        if (
+          !confirm(
+            "Reset ALL activity data — contacts, flows, events and funnel stats? Automations and your Instagram connection are kept.",
+          )
+        )
+          return;
+        await api("/reset-activity", { method: "POST" });
+        toast("Activity data reset");
+        refresh();
+      };
+      $("#copy-url").onclick = () => {
+        navigator.clipboard.writeText($("#wh-url").textContent);
+        toast("Callback URL copied");
+      };
+
+      async function refresh() {
+        S = await api("/state");
+        renderAll();
+      }
+      (async function init() {
+        const q = new URLSearchParams(location.search);
+        if (q.get("connected")) toast("Instagram connected — live mode on");
+        if (q.get("auth_error")) {
+          toast("Connect failed: " + q.get("auth_error"), true);
+        }
+        try {
+          await refresh();
+        } catch (err) {
+          toast(err.message, true);
+        }
+      })();
+    </script>
+  </body>
+</html>

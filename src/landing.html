@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>SayTheWord</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400..500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;1,8..60,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink: #17191c;
+        --paper: #ffffff;
+        --mist: #f2f2f3;
+        --fog: #fafafb;
+        --slate: #777b86;
+        --ash: #979799;
+        --smoke: #a3a6af;
+        --peach: #fbe1d1;
+        --sienna: #5d2a1a;
+        --line: #ececec;
+        --line-strong: rgba(23, 25, 28, 0.08);
+        --serif: "Source Serif 4", ui-serif, Georgia, serif;
+        --sans:
+          "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+          sans-serif;
+        --ease: cubic-bezier(0.22, 1, 0.36, 1);
+        --sh-float:
+          0 0 0 1px rgba(4, 23, 43, 0.05), 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 8px 10px -6px rgba(0, 0, 0, 0.1);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: var(--paper);
+        color: var(--ink);
+        font-family: var(--sans);
+        font-size: 16px;
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+      }
+      a {
+        color: var(--ink);
+      }
+      :focus-visible {
+        outline: 2px solid rgba(23, 25, 28, 0.4);
+        outline-offset: 2px;
+        border-radius: 4px;
+      }
+      .wrap {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 32px;
+      }
+
+      /* nav */
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 24px 0;
+      }
+      .wordmark {
+        font-family: var(--serif);
+        font-size: 19px;
+        font-weight: 400;
+        letter-spacing: -0.2px;
+        text-decoration: none;
+      }
+      .wordmark .arr {
+        font-style: italic;
+      }
+      .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+      }
+      .nav-right a.text {
+        font-size: 15px;
+        font-weight: 450;
+        color: var(--ink);
+        text-decoration: none;
+      }
+      .nav-right a.text:hover {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--ink);
+        color: var(--paper);
+        border: 1px solid var(--ink);
+        border-radius: 9999px;
+        padding: 0 20px;
+        height: 40px;
+        font-size: 15px;
+        font-weight: 450;
+        font-family: var(--sans);
+        text-decoration: none;
+        transition: background-color 0.14s var(--ease);
+      }
+      .pill:hover {
+        background: #2a2d33;
+      }
+      .pill.ghost {
+        background: transparent;
+        color: var(--ink);
+      }
+      .pill.ghost:hover {
+        background: var(--mist);
+      }
+
+      /* hero */
+      .hero {
+        position: relative;
+        padding: 88px 0 64px;
+        text-align: center;
+      }
+      .hero h1 {
+        font-family: var(--serif);
+        font-weight: 400;
+        font-size: 64px;
+        line-height: 1.15;
+        letter-spacing: -0.96px;
+        margin: 0 auto 20px;
+        max-width: 900px;
+      }
+      .hero h1 .it {
+        font-style: italic;
+      }
+      .hero .sub {
+        font-size: 18px;
+        font-weight: 430;
+        color: var(--slate);
+        max-width: 560px;
+        margin: 0 auto 32px;
+        line-height: 1.5;
+      }
+      .hero .actions {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        align-items: center;
+      }
+      .hero .actions .textlink {
+        font-size: 15px;
+        font-weight: 450;
+        color: var(--ink);
+        text-decoration: none;
+        padding: 8px 4px;
+      }
+      .hero .actions .textlink:hover {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      /* floating artifact collage */
+      .collage {
+        position: relative;
+        max-width: 1080px;
+        margin: 8px auto 0;
+        display: grid;
+        grid-template-columns: 1fr 1.1fr 1fr;
+        gap: 24px;
+        align-items: start;
+      }
+      .artifact {
+        background: var(--paper);
+        border-radius: 20px;
+        box-shadow: var(--sh-float);
+        padding: 20px;
+        text-align: left;
+      }
+      .artifact.offset-up {
+        margin-top: -24px;
+      }
+      .artifact.offset-down {
+        margin-top: 40px;
+      }
+      .artifact h3 {
+        margin: 0 0 2px;
+        font-size: 14px;
+        font-weight: 450;
+        color: var(--slate);
+      }
+      .artifact .metric {
+        font-size: 28px;
+        font-weight: 500;
+        font-variant-numeric: tabular-nums;
+        line-height: 1.1;
+        margin: 8px 0 2px;
+      }
+      .artifact .delta {
+        font-size: 13px;
+        color: var(--slate);
+      }
+      .spark {
+        display: block;
+        width: 100%;
+        height: 44px;
+        margin-top: 12px;
+      }
+      /* DM thread artifact */
+      .dm-row {
+        display: flex;
+        margin-top: 10px;
+      }
+      .dm-row.me {
+        justify-content: flex-end;
+      }
+      .bubble {
+        max-width: 88%;
+        padding: 9px 13px;
+        border-radius: 18px;
+        font-size: 13px;
+        line-height: 1.45;
+        white-space: pre-wrap;
+      }
+      .bubble.them {
+        background: var(--mist);
+        color: var(--ink);
+        border-bottom-left-radius: 6px;
+      }
+      .bubble.grad {
+        background: linear-gradient(135deg, #a033ff, #ff5280);
+        color: #fff;
+        border-bottom-right-radius: 6px;
+      }
+      .tpl {
+        margin-top: 10px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        overflow: hidden;
+        font-size: 13px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+      .tpl .t {
+        padding: 12px 14px;
+      }
+      .tpl .tbtn {
+        display: block;
+        text-align: center;
+        padding: 12px;
+        border-top: 1px solid var(--line);
+        color: #3797f0;
+        font-weight: 450;
+        text-decoration: none;
+      }
+      .notelabel {
+        font-size: 12.5px;
+        color: var(--ash);
+        text-align: center;
+        margin: 12px 0 4px;
+      }
+      /* comment artifact */
+      .cmt {
+        border-left: 2px solid var(--line);
+        padding: 2px 0 2px 12px;
+        margin-top: 10px;
+      }
+      .cmt .u {
+        font-size: 13px;
+        font-weight: 500;
+      }
+      .cmt .txt {
+        font-size: 13.5px;
+        color: var(--ink);
+      }
+      .cmt .reply {
+        font-size: 13px;
+        color: var(--slate);
+        margin-top: 8px;
+      }
+      .cmt .reply b {
+        color: var(--ink);
+        font-weight: 450;
+      }
+
+      /* peach callout */
+      .callout {
+        background: var(--peach);
+        color: var(--sienna);
+        border-radius: 24px;
+        padding: 40px;
+        max-width: 760px;
+        margin: 96px auto 0;
+        text-align: left;
+      }
+      .callout h2 {
+        font-family: var(--serif);
+        font-weight: 400;
+        font-size: 26px;
+        letter-spacing: -0.23px;
+        line-height: 1.18;
+        margin: 0 0 8px;
+      }
+      .callout p {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 430;
+        line-height: 1.6;
+      }
+      .callout p + p {
+        margin-top: 12px;
+      }
+
+      /* how it works */
+      .how {
+        padding: 96px 0 8px;
+      }
+      .how h2 {
+        font-family: var(--serif);
+        font-weight: 400;
+        font-size: 44px;
+        letter-spacing: -0.66px;
+        line-height: 1.2;
+        margin: 0 0 40px;
+      }
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+      }
+      .step {
+        background: var(--mist);
+        border-radius: 24px;
+        padding: 24px;
+      }
+      .step .n {
+        font-size: 13px;
+        color: var(--ash);
+        font-variant-numeric: tabular-nums;
+      }
+      .step h3 {
+        font-size: 17px;
+        font-weight: 500;
+        margin: 10px 0 6px;
+        letter-spacing: -0.162px;
+      }
+      .step p {
+        margin: 0;
+        font-size: 14.5px;
+        color: var(--slate);
+        line-height: 1.55;
+      }
+
+      /* footer */
+      footer {
+        margin-top: 96px;
+        border-top: 1px solid var(--line);
+      }
+      .foot-in {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 28px 0;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .foot-in p {
+        margin: 0;
+        font-size: 14px;
+        color: var(--slate);
+      }
+      .foot-links {
+        display: flex;
+        gap: 24px;
+      }
+      .foot-links a {
+        font-size: 14px;
+        font-weight: 450;
+        color: var(--ink);
+        text-decoration: none;
+      }
+      .foot-links a:hover {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      @media (max-width: 900px) {
+        .hero {
+          padding: 56px 0 40px;
+        }
+        .hero h1 {
+          font-size: 40px;
+          letter-spacing: -0.5px;
+        }
+        .hero .sub {
+          font-size: 17px;
+        }
+        .collage {
+          grid-template-columns: 1fr;
+          max-width: 440px;
+        }
+        .artifact.offset-up,
+        .artifact.offset-down {
+          margin-top: 0;
+        }
+        .steps {
+          grid-template-columns: 1fr;
+        }
+        .nav-right a.text {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <nav class="nav">
+        <a class="wordmark" href="/">SayTheWord</a>
+        <div class="nav-right">
+          <a class="text" href="/privacy">Privacy</a>
+          <a class="text" href="/data-deletion">Data deletion</a>
+          <a class="pill" href="/admin">Open console</a>
+        </div>
+      </nav>
+
+      <header class="hero">
+        <h1
+          >Say the word.<br />Get the link
+          <span class="it">in your DMs.</span></h1
+        >
+        <p class="sub"
+          >The automation behind this Instagram account: comment a keyword on a
+          reel, get a public reply and a direct message with the link</p
+        >
+        <div class="actions">
+          <a class="pill" href="/admin">Open console</a>
+          <a class="textlink" href="/privacy">How data is handled →</a>
+        </div>
+
+        <div class="collage">
+          <div class="artifact offset-up">
+            <h3>Comment on your reel</h3>
+            <div class="cmt">
+              <div class="u">@maya.reads</div>
+              <div class="txt">link please</div>
+              <div class="reply"><b>Reply</b> · Got you — check your DMs</div>
+            </div>
+            <div class="cmt">
+              <div class="u">@tom_h</div>
+              <div class="txt">LINK</div>
+              <div class="reply"
+                ><b>Reply</b> · Just sent it, check your DMs</div
+              >
+            </div>
+          </div>
+
+          <div class="artifact offset-down">
+            <div class="notelabel">Private reply · 9:41</div>
+            <div class="dm-row me"
+              ><div class="bubble grad"
+                >Hey there! Thanks for commenting — tap the button below and
+                I'll send you the link.</div
+              ></div
+            >
+            <div class="tpl">
+              <div class="t">Tap the button and the link is yours</div>
+              <a class="tbtn" href="#" onclick="return false;"
+                >Send me the link</a
+              >
+            </div>
+          </div>
+
+          <div class="artifact offset-up">
+            <h3>Link clicks this month</h3>
+            <div class="metric">184</div>
+            <div class="delta">+23% vs last month</div>
+            <svg
+              class="spark"
+              viewBox="0 0 200 44"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M0 36 C 20 34, 30 30, 45 31 S 75 24, 90 22 S 120 20, 135 14 S 170 10, 200 4"
+                fill="none"
+                stroke="#5d2a1a"
+                stroke-width="1.5"
+              />
+            </svg>
+          </div>
+        </div>
+      </header>
+
+      <section class="callout">
+        <h2>Only what the message needs</h2>
+        <p
+          >We store your Instagram user ID, your username and the comment you
+          left — nothing else. No email, no phone number, no browsing history.
+          DM the account the words "delete my data" and everything is erased
+          immediately</p
+        >
+      </section>
+
+      <section class="how">
+        <h2>How it works</h2>
+        <div class="steps">
+          <div class="step"
+            ><div class="n">01</div><h3>Comment</h3
+            ><p>You comment a keyword like "link" on a reel</p></div
+          >
+          <div class="step"
+            ><div class="n">02</div><h3>Public reply</h3
+            ><p>The comment gets a short reply pointing to your DMs</p></div
+          >
+          <div class="step"
+            ><div class="n">03</div><h3>Direct message</h3
+            ><p
+              >A private reply arrives with a button — follow the account if
+              asked</p
+            ></div
+          >
+          <div class="step"
+            ><div class="n">04</div><h3>The link</h3
+            ><p
+              >Tap the button and the link opens, tracked so nothing gets
+              lost</p
+            ></div
+          >
+        </div>
+      </section>
+
+      <footer>
+        <div class="foot-in">
+          <p>© {{year}} SayTheWord</p>
+          <div class="foot-links">
+            <a href="/privacy">Privacy</a>
+            <a href="/data-deletion">Data deletion</a>
+            <a href="/admin">Console</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
